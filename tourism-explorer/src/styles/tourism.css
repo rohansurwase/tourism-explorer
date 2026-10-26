@@ -1,0 +1,658 @@
+/* ========================================================
+   Tourism Explorer Component Styles
+   Supports: Sidebar & Mainline, Light & Dark themes
+   ======================================================== */
+
+:root {
+  --te-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --te-bg: #ffffff;
+  --te-bg-subtle: #f8fafc;
+  --te-card-bg: #ffffff;
+  --te-card-border: #e2e8f0;
+  --te-card-hover-border: #3b82f6;
+  --te-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --te-card-hover-shadow: 0 8px 24px rgba(59, 130, 246, 0.12);
+  --te-text: #0f172a;
+  --te-text-muted: #64748b;
+  --te-text-dim: #94a3b8;
+  --te-primary: #2563eb;
+  --te-primary-hover: #1d4ed8;
+  --te-primary-bg: #eff6ff;
+  --te-accent: #0ea5e9;
+  --te-badge-bg: #f1f5f9;
+  --te-badge-text: #334155;
+  --te-border: #e2e8f0;
+  --te-radius-sm: 8px;
+  --te-radius-md: 12px;
+  --te-radius-lg: 16px;
+  --te-radius-full: 9999px;
+  --te-glass: rgba(255, 255, 255, 0.85);
+  --te-glass-border: rgba(226, 232, 240, 0.8);
+}
+
+.te-dark {
+  --te-bg: #0f172a;
+  --te-bg-subtle: #1e293b;
+  --te-card-bg: #1e293b;
+  --te-card-border: #334155;
+  --te-card-hover-border: #60a5fa;
+  --te-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --te-card-hover-shadow: 0 8px 24px rgba(96, 165, 250, 0.2);
+  --te-text: #f8fafc;
+  --te-text-muted: #94a3b8;
+  --te-text-dim: #64748b;
+  --te-primary: #3b82f6;
+  --te-primary-hover: #60a5fa;
+  --te-primary-bg: rgba(59, 130, 246, 0.15);
+  --te-accent: #38bdf8;
+  --te-badge-bg: #334155;
+  --te-badge-text: #e2e8f0;
+  --te-border: #334155;
+  --te-glass: rgba(30, 41, 59, 0.9);
+  --te-glass-border: rgba(51, 65, 85, 0.8);
+}
+
+/* Container */
+.te-container {
+  font-family: var(--te-font);
+  background: var(--te-bg);
+  color: var(--te-text);
+  border-radius: var(--te-radius-lg);
+  border: 1px solid var(--te-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.te-container * {
+  box-sizing: border-box;
+}
+
+/* Header */
+.te-header {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(14, 165, 233, 0.04) 100%);
+  border-bottom: 1px solid var(--te-border);
+}
+
+.te-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.te-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.te-icon-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--te-radius-md);
+  background: var(--te-primary-bg);
+  color: var(--te-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.te-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--te-text);
+  line-height: 1.25;
+}
+
+.te-subtitle {
+  margin: 3px 0 0 0;
+  font-size: 12px;
+  color: var(--te-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.te-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.te-theme-btn {
+  background: var(--te-bg-subtle);
+  border: 1px solid var(--te-border);
+  color: var(--te-text);
+  border-radius: var(--te-radius-full);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.15s ease;
+}
+
+.te-theme-btn:hover {
+  background: var(--te-primary-bg);
+  border-color: var(--te-primary);
+  color: var(--te-primary);
+}
+
+/* Weather Bar */
+.te-weather-bar {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--te-card-bg);
+  border: 1px solid var(--te-card-border);
+  border-radius: var(--te-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.te-weather-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.te-weather-icon {
+  font-size: 20px;
+}
+
+.te-weather-temp {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.te-weather-condition {
+  color: var(--te-text-muted);
+}
+
+.te-weather-advice {
+  font-size: 12px;
+  color: var(--te-primary);
+  background: var(--te-primary-bg);
+  padding: 4px 10px;
+  border-radius: var(--te-radius-full);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 55%;
+}
+
+/* Navigation Tabs */
+.te-tabs {
+  display: flex;
+  padding: 6px 16px;
+  background: var(--te-bg-subtle);
+  border-bottom: 1px solid var(--te-border);
+  gap: 6px;
+  overflow-x: auto;
+}
+
+.te-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--te-radius-full);
+  border: none;
+  background: transparent;
+  color: var(--te-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.te-tab-btn:hover {
+  color: var(--te-text);
+  background: var(--te-badge-bg);
+}
+
+.te-tab-btn.active {
+  background: var(--te-primary);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+/* Category Filter Pills */
+.te-categories-bar {
+  padding: 10px 16px;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--te-border);
+  scrollbar-width: thin;
+}
+
+.te-cat-pill {
+  border: 1px solid var(--te-border);
+  background: var(--te-card-bg);
+  color: var(--te-text-muted);
+  padding: 5px 12px;
+  border-radius: var(--te-radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.te-cat-pill:hover {
+  border-color: var(--te-primary);
+  color: var(--te-primary);
+}
+
+.te-cat-pill.active {
+  background: var(--te-primary-bg);
+  border-color: var(--te-primary);
+  color: var(--te-primary);
+  font-weight: 600;
+}
+
+/* Main Content Area */
+.te-content {
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Sights Grid */
+.te-grid {
+  display: grid;
+  gap: 14px;
+}
+
+/* Sidebar Layout (default narrow) */
+.te-sidebar .te-grid {
+  grid-template-columns: 1fr;
+}
+
+/* Mainline Layout (wider) */
+.te-mainline .te-grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+/* Attraction Card */
+.te-card {
+  background: var(--te-card-bg);
+  border: 1px solid var(--te-card-border);
+  border-radius: var(--te-radius-md);
+  padding: 14px;
+  box-shadow: var(--te-card-shadow);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  position: relative;
+}
+
+.te-card:hover {
+  border-color: var(--te-card-hover-border);
+  box-shadow: var(--te-card-hover-shadow);
+  transform: translateY(-2px);
+}
+
+.te-card.active-marker {
+  border-color: var(--te-primary);
+  box-shadow: 0 0 0 2px var(--te-primary);
+}
+
+.te-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.te-card-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--te-text);
+  line-height: 1.3;
+}
+
+.te-category-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--te-radius-full);
+  background: var(--te-badge-bg);
+  color: var(--te-badge-text);
+  white-space: nowrap;
+}
+
+.te-card-address {
+  font-size: 12px;
+  color: var(--te-text-muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.te-card-desc {
+  font-size: 12.5px;
+  color: var(--te-text-muted);
+  line-height: 1.45;
+  margin: 0 0 10px 0;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.te-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px dashed var(--te-border);
+  font-size: 12px;
+}
+
+.te-distances {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--te-text-dim);
+}
+
+.te-dist-tag {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 500;
+  color: var(--te-text);
+}
+
+.te-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.te-action-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--te-primary);
+  text-decoration: none;
+  padding: 3px 8px;
+  border-radius: var(--te-radius-sm);
+  background: var(--te-primary-bg);
+  transition: all 0.15s ease;
+}
+
+.te-action-link:hover {
+  background: var(--te-primary);
+  color: #ffffff;
+}
+
+/* Day Plan Itinerary View */
+.te-plan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.te-plan-item {
+  display: flex;
+  gap: 14px;
+  position: relative;
+}
+
+.te-plan-timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 32px;
+  flex-shrink: 0;
+}
+
+.te-plan-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--te-radius-full);
+  background: var(--te-primary);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+}
+
+.te-plan-line {
+  width: 2px;
+  flex: 1;
+  background: var(--te-border);
+  margin-top: 4px;
+}
+
+.te-plan-card {
+  flex: 1;
+  background: var(--te-card-bg);
+  border: 1px solid var(--te-card-border);
+  border-radius: var(--te-radius-md);
+  padding: 12px 14px;
+  box-shadow: var(--te-card-shadow);
+}
+
+.te-plan-slot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 11.5px;
+  color: var(--te-primary);
+  font-weight: 600;
+}
+
+.te-plan-place-name {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: var(--te-text);
+}
+
+.te-plan-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--te-text-muted);
+  margin-top: 6px;
+}
+
+/* Map View */
+.te-map-wrapper {
+  background: var(--te-bg-subtle);
+  border-radius: var(--te-radius-md);
+  border: 1px solid var(--te-border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 380px;
+  position: relative;
+}
+
+.te-map-svg {
+  width: 100%;
+  height: 100%;
+  background: #e2e8f0;
+}
+
+.te-dark .te-map-svg {
+  background: #1e293b;
+}
+
+.te-map-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 10;
+}
+
+.te-map-ctrl-btn {
+  width: 28px;
+  height: 28px;
+  background: var(--te-card-bg);
+  border: 1px solid var(--te-border);
+  color: var(--te-text);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.te-map-marker-pin {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.te-map-marker-pin:hover {
+  transform: scale(1.15);
+}
+
+/* Empty State */
+.te-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.te-empty-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.te-empty-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--te-text);
+}
+
+.te-empty-desc {
+  font-size: 13px;
+  color: var(--te-text-muted);
+  max-width: 320px;
+  margin: 0 0 16px 0;
+  line-height: 1.45;
+}
+
+.te-empty-btn {
+  background: var(--te-primary);
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--te-radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.te-empty-btn:hover {
+  background: var(--te-primary-hover);
+}
+
+/* Modal Details Popup */
+.te-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.te-modal {
+  background: var(--te-card-bg);
+  color: var(--te-text);
+  border: 1px solid var(--te-card-border);
+  border-radius: var(--te-radius-lg);
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: teModalSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes teModalSlide {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.te-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--te-border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.te-modal-close {
+  background: transparent;
+  border: none;
+  color: var(--te-text-muted);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.te-modal-body {
+  padding: 20px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.te-modal-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--te-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

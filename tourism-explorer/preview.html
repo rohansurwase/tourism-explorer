@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tourism Explorer — hyperDart Live Runner</title>
+  <style>
+    /* CSS Variables & Theme */
+    :root {
+      --te-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --te-bg: #ffffff;
+      --te-bg-subtle: #f8fafc;
+      --te-card-bg: #ffffff;
+      --te-card-border: #e2e8f0;
+      --te-card-hover-border: #3b82f6;
+      --te-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --te-card-hover-shadow: 0 8px 24px rgba(59, 130, 246, 0.12);
+      --te-text: #0f172a;
+      --te-text-muted: #64748b;
+      --te-text-dim: #94a3b8;
+      --te-primary: #2563eb;
+      --te-primary-hover: #1d4ed8;
+      --te-primary-bg: #eff6ff;
+      --te-accent: #0ea5e9;
+      --te-badge-bg: #f1f5f9;
+      --te-badge-text: #334155;
+      --te-border: #e2e8f0;
+      --te-radius-sm: 8px;
+      --te-radius-md: 12px;
+      --te-radius-lg: 16px;
+      --te-radius-full: 9999px;
+    }
+
+    body.dark, .te-dark {
+      --te-bg: #0f172a;
+      --te-bg-subtle: #1e293b;
+      --te-card-bg: #1e293b;
+      --te-card-border: #334155;
+      --te-card-hover-border: #60a5fa;
+      --te-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --te-card-hover-shadow: 0 8px 24px rgba(96, 165, 250, 0.2);
+      --te-text: #f8fafc;
+      --te-text-muted: #94a3b8;
+      --te-text-dim: #64748b;
+      --te-primary: #3b82f6;
+      --te-primary-hover: #60a5fa;
+      --te-primary-bg: rgba(59, 130, 246, 0.15);
+      --te-accent: #38bdf8;
+      --te-badge-bg: #334155;
+      --te-badge-text: #e2e8f0;
+      --te-border: #334155;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--te-font);
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 24px;
+      transition: background 0.2s ease;
+    }
+
+    body.dark {
+      background: #020617;
+      color: #f8fafc;
+    }
+
+    /* Sandbox Dev Toolbar */
+    .sandbox-toolbar {
+      max-width: 1000px;
+      margin: 0 auto 20px auto;
+      background: var(--te-card-bg);
+      border: 1px solid var(--te-border);
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .query-btn {
+      padding: 6px 14px;
+      background: var(--te-bg-subtle);
+      border: 1px solid var(--te-border);
+      color: var(--te-text);
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    .query-btn:hover, .query-btn.active {
+      background: var(--te-primary);
+      color: white;
+      border-color: var(--te-primary);
+    }
+
+    .layout-btn {
+      padding: 6px 12px;
+      border: 1px solid var(--te-border);
+      background: var(--te-card-bg);
+      color: var(--te-text);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .layout-btn.active {
+      background: var(--te-primary);
+      color: white;
+      border-color: var(--te-primary);
+    }
+
+    .sandbox-stage {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    .stage-sidebar {
+      width: 380px;
+      max-width: 100%;
+    }
+
+    .stage-mainline {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* Tourism Component Container */
+    .te-container {
+      background: var(--te-bg);
+      color: var(--te-text);
+      border-radius: var(--te-radius-lg);
+      border: 1px solid var(--te-border);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .te-container * {
+      box-sizing: border-box;
+    }
+
+    /* Header */
+    .te-header {
+      padding: 16px 20px;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(14, 165, 233, 0.04) 100%);
+      border-bottom: 1px solid var(--te-border);
+    }
+
+    .te-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .te-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .te-icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--te-radius-md);
+      background: var(--te-primary-bg);
+      color: var(--te-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .te-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--te-text);
+      line-height: 1.25;
+    }
+
+    .te-subtitle {
+      margin: 3px 0 0 0;
+      font-size: 12px;
+      color: var(--te-text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .te-weather-bar {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: var(--te-card-bg);
+      border: 1px solid var(--te-card-border);
+      border-radius: var(--te-radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .te-weather-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .te-weather-temp {
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .te-weather-advice {
+      font-size: 12px;
+      color: var(--te-primary);
+      background: var(--te-primary-bg);
+      padding: 4px 10px;
+      border-radius: var(--te-radius-full);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 55%;
+    }
+
+    /* Tabs */
+    .te-tabs {
+      display: flex;
+      padding: 8px 16px;
+      background: var(--te-bg-subtle);
+      border-bottom: 1px solid var(--te-border);
+      gap: 6px;
+      overflow-x: auto;
+    }
+
+    .te-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--te-radius-full);
+      border: none;
+      background: transparent;
+      color: var(--te-text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .te-tab-btn:hover {
+      color: var(--te-text);
+      background: var(--te-badge-bg);
+    }
+
+    .te-tab-btn.active {
+      background: var(--te-primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    }
+
+    /* Category Pills */
+    .te-categories-bar {
+      padding: 10px 16px;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--te-border);
+    }
+
+    .te-cat-pill {
+      border: 1px solid var(--te-border);
+      background: var(--te-card-bg);
+      color: var(--te-text-muted);
+      padding: 5px 12px;
+      border-radius: var(--te-radius-full);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .te-cat-pill:hover {
+      border-color: var(--te-primary);
+      color: var(--te-primary);
+    }
+
+    .te-cat-pill.active {
+      background: var(--te-primary-bg);
+      border-color: var(--te-primary);
+      color: var(--te-primary);
+      font-weight: 600;
+    }
+
+    /* Content & Cards */
+    .te-content {
+      padding: 16px;
+      flex: 1;
+      overflow-y: auto;
+      min-height: 380px;
+    }
+
+    .te-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .te-sidebar .te-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .te-mainline .te-grid {
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .te-card {
+      background: var(--te-card-bg);
+      border: 1px solid var(--te-card-border);
+      border-radius: var(--te-radius-md);
+      padding: 14px;
+      box-shadow: var(--te-card-shadow);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .te-card:hover {
+      border-color: var(--te-card-hover-border);
+      box-shadow: var(--te-card-hover-shadow);
+      transform: translateY(-2px);
+    }
+
+    .te-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .te-card-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--te-text);
+      line-height: 1.3;
+    }
+
+    .te-category-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: var(--te-radius-full);
+      background: var(--te-badge-bg);
+      color: var(--te-badge-text);
+      white-space: nowrap;
+    }
+
+    .te-card-address {
+      font-size: 12px;
+      color: var(--te-text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .te-card-desc {
+      font-size: 12.5px;
+      color: var(--te-text-muted);
+      line-height: 1.45;
+      margin: 0 0 10px 0;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .te-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px dashed var(--te-border);
+      font-size: 12px;
+    }
+
+    .te-distances {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .te-dist-tag {
+      font-weight: 500;
+      color: var(--te-text);
+      font-size: 11.5px;
+    }
+
+    .te-card-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .te-action-link {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--te-primary);
+      text-decoration: none;
+      padding: 3px 8px;
+      border-radius: var(--te-radius-sm);
+      background: var(--te-primary-bg);
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .te-action-link:hover {
+      background: var(--te-primary);
+      color: #ffffff;
+    }
+
+    /* Day Plan Itinerary View */
+    .te-plan-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .te-plan-item {
+      display: flex;
+      gap: 14px;
+      position: relative;
+    }
+
+    .te-plan-timeline {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 32px;
+      flex-shrink: 0;
+    }
+
+    .te-plan-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--te-radius-full);
+      background: var(--te-primary);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+      z-index: 2;
+    }
+
+    .te-plan-line {
+      width: 2px;
+      flex: 1;
+      background: var(--te-border);
+      margin-top: 4px;
+    }
+
+    .te-plan-card {
+      flex: 1;
+      background: var(--te-card-bg);
+      border: 1px solid var(--te-card-border);
+      border-radius: var(--te-radius-md);
+      padding: 12px 14px;
+      box-shadow: var(--te-card-shadow);
+      cursor: pointer;
+    }
+
+    .te-plan-slot-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 11.5px;
+      color: var(--te-primary);
+      font-weight: 600;
+    }
+
+    .te-plan-place-name {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      color: var(--te-text);
+    }
+
+    /* Map View */
+    .te-map-wrapper {
+      background: var(--te-bg-subtle);
+      border-radius: var(--te-radius-md);
+      border: 1px solid var(--te-border);
+      overflow: hidden;
+      height: 380px;
+      position: relative;
+    }
+
+    .te-map-svg {
+      width: 100%;
+      height: 100%;
+      background: #e2e8f0;
+    }
+
+    .dark .te-map-svg {
+      background: #1e293b;
+    }
+
+    .te-map-controls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 10;
+    }
+
+    .te-map-ctrl-btn {
+      width: 28px;
+      height: 28px;
+      background: var(--te-card-bg);
+      border: 1px solid var(--te-border);
+      color: var(--te-text);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .te-map-marker-pin {
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .te-map-marker-pin:hover {
+      transform: scale(1.15);
+    }
+
+    /* Modal */
+    .te-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1000;
+    }
+
+    .te-modal {
+      background: var(--te-card-bg);
+      color: var(--te-text);
+      border: 1px solid var(--te-card-border);
+      border-radius: var(--te-radius-lg);
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .te-modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--te-border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .te-modal-body {
+      padding: 20px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .te-modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--te-border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sandbox Toolbar -->
+  <div class="sandbox-toolbar">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+      <div>
+        <h2 style="margin: 0 0 4px 0; font-size: 18px; display: flex; align-items: center; gap: 8px;">
+          🧭 hyperDart — Tourism Explorer Interactive Live Runner
+        </h2>
+        <div style="font-size: 12px; color: var(--te-text-muted)">
+          Standalone component execution testbench • Hackathon Evaluation Ready
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button id="themeToggleBtn" class="layout-btn" title="Toggle Light / Dark Mode">
+          🌓 Theme
+        </button>
+        <button id="viewSidebarBtn" class="layout-btn active">
+          📱 Sidebar (380px)
+        </button>
+        <button id="viewMainlineBtn" class="layout-btn">
+          💻 Mainline (Wide)
+        </button>
+      </div>
+    </div>
+
+    <div class="toolbar-row">
+      <strong style="font-size: 13px;">Test Sample Queries:</strong>
+      <button class="query-btn active" onclick="loadQuery(0)">NYC (Tourist attractions in NYC)</button>
+      <button class="query-btn" onclick="loadQuery(1)">Paris (Things to do in Paris)</button>
+      <button class="query-btn" onclick="loadQuery(2)">Rome (Landmarks in Rome)</button>
+      <button class="query-btn" onclick="loadQuery(3)">Delhi (museums in Delhi)</button>
+      <button class="query-btn" onclick="loadQuery(4)">Kurukshetra (places to visit)</button>
+    </div>
+  </div>
+
+  <!-- Stage Container -->
+  <div class="sandbox-stage">
+    <div id="stageContainer" class="stage-sidebar">
+      <div id="tourismApp"></div>
+    </div>
+  </div>
+
+  <!-- Details Modal Container -->
+  <div id="modalContainer" style="display: none;"></div>
+
+  <script>
+    // Sample Datasets
+    const DATASETS = [
+      {
+        city: 'New York City',
+        country: 'United States',
+        query: 'Tourist attractions in NYC',
+        lat: 40.71427,
+        lon: -74.00597,
+        category: 'city',
+        places: [
+          { id: 'n1', name: 'Central Park', category: 'Park & Nature', lat: 40.7850, lon: -73.9682, address: 'New York, NY 10022', distanceKm: 0.8, description: 'World-famous 843-acre urban oasis featuring lakes, Belvedere Castle, and peaceful walking pathways.' },
+          { id: 'n2', name: 'The Metropolitan Museum of Art', category: 'Museum', lat: 40.7794, lon: -73.9632, address: '1000 5th Ave, New York, NY 10028', distanceKm: 1.1, description: 'Premier cultural institution showcasing over 5,000 years of global artistic achievements.' },
+          { id: 'n3', name: 'Empire State', category: 'Scenic Viewpoint', lat: 40.7488, lon: -73.9857, address: '20 W 34th St, New York, NY 10001', distanceKm: 1.9, description: 'Legendary 102-story Art Deco skyscraper boasting celebrated open-air observatories.' },
+          { id: 'n4', name: 'Statue of Liberty & Ellis Island', category: 'Monument', lat: 40.6892, lon: -74.0445, address: 'New York Harbor, NY 10004', distanceKm: 4.5, description: 'Universal symbol of freedom and democracy gifted to the United States by France in 1886.' },
+          { id: 'n5', name: 'Brooklyn Bridge', category: 'Historic Landmark', lat: 40.7061, lon: -73.9969, address: 'Brooklyn Bridge, New York, NY 10038', distanceKm: 2.8, description: 'Historic limestone and granite suspension bridge offering scenic walks between Manhattan and Brooklyn.' }
+        ]
+      },
+      {
+        city: 'Paris',
+        country: 'France',
+        query: 'Things to do in Paris',
+        lat: 48.8566,
+        lon: 2.3522,
+        category: null,
+        places: [
+          { id: 'p1', name: 'Eiffel Tower', category: 'Historic Landmark', lat: 48.8584, lon: 2.2945, address: 'Champ de Mars, 5 Av. Anatole France, 75007 Paris', distanceKm: 0.5, description: 'Iconic wrought-iron lattice tower on the Champ de Mars, offering panoramic 360-degree city views.' },
+          { id: 'p2', name: 'Louvre Museum', category: 'Museum', lat: 48.8606, lon: 2.3376, address: 'Rue de Rivoli, 75001 Paris', distanceKm: 1.2, description: 'World largest art museum and historic royal palace housing the Mona Lisa and Venus de Milo.' },
+          { id: 'p3', name: 'Cathédrale Notre-Dame de Paris', category: 'Temple / Sacred Site', lat: 48.8530, lon: 2.3499, address: '6 Parvis Notre-Dame, 75004 Paris', distanceKm: 1.8, description: 'Gothic architectural masterpiece on the Île de la Cité dating back to the 12th century.' },
+          { id: 'p4', name: 'Arc de Triomphe', category: 'Monument', lat: 48.8738, lon: 2.2950, address: 'Pl. Charles de Gaulle, 75008 Paris', distanceKm: 2.2, description: 'Grand triumphal monument honouring those who fought for France, standing at the summit of Champs-Élysées.' },
+          { id: 'p5', name: 'Musée d\'Orsay', category: 'Museum', lat: 48.8599, lon: 2.3266, address: '1 Rue de la Légion d\'Honneur, 75007 Paris', distanceKm: 1.5, description: 'Former railway station holding the world greatest collection of Impressionist masterpieces.' }
+        ]
+      },
+      {
+        city: 'Rome',
+        country: 'Italy',
+        query: 'Landmarks in Rome',
+        lat: 41.9028,
+        lon: 12.4964,
+        category: 'monument',
+        places: [
+          { id: 'r1', name: 'Colosseum', category: 'Historic Landmark', lat: 41.8902, lon: 12.4922, address: 'Piazza del Colosseo, 1, 00184 Roma RM, Italy', distanceKm: 0.4, description: 'Largest ancient amphitheater ever built, staging gladiatorial contests in imperial Rome.' },
+          { id: 'r2', name: 'Pantheon', category: 'Temple / Sacred Site', lat: 41.8986, lon: 12.4769, address: 'Piazza della Rotonda, 00186 Roma RM, Italy', distanceKm: 0.9, description: 'Best preserved Roman monument featuring the world largest unreinforced concrete dome.' },
+          { id: 'r3', name: 'Trevi Fountain', category: 'Monument', lat: 41.9009, lon: 12.4833, address: 'Piazza di Trevi, 00187 Roma RM, Italy', distanceKm: 1.1, description: 'Breathtaking Baroque fountain carved by Nicola Salvi where legends promise returning travellers.' },
+          { id: 'r4', name: 'Roman Forum', category: 'Historic Landmark', lat: 41.8925, lon: 12.4853, address: 'Via della Salara Vecchia, 00186 Roma RM', distanceKm: 0.7, description: 'Rectangular forum surrounded by the ruins of ancient government buildings at the center of Rome.' }
+        ]
+      },
+      {
+        city: 'Delhi',
+        country: 'India',
+        query: 'museums in Delhi',
+        lat: 28.6139,
+        lon: 77.2090,
+        category: 'museum',
+        places: [
+          { id: 'd1', name: 'National Museum New Delhi', category: 'Museum', lat: 28.6118, lon: 77.2193, address: 'Janpath, New Delhi, Delhi 110011', distanceKm: 0.9, description: 'India premier national institution holding 200,000 works of art spanning over 5,000 years.' },
+          { id: 'd2', name: 'National Gallery of Modern Art', category: 'Museum', lat: 28.6097, lon: 77.2346, address: 'Jaipur House, Shershah Rd, New Delhi', distanceKm: 1.3, description: 'Premier art gallery exhibiting historic modern Indian artwork in the former residence of Maharaja of Jaipur.' },
+          { id: 'd3', name: 'National Science Centre', category: 'Museum', lat: 28.6135, lon: 77.2458, address: 'Bhairon Marg, Pragati Maidan, New Delhi', distanceKm: 2.1, description: 'Engaging interactive science and technology museum with six floors of thematic exhibits.' },
+          { id: 'd4', name: 'Crafts Museum (National Handicrafts)', category: 'Museum', lat: 28.6148, lon: 77.2422, address: 'Bhairon Marg, Pragati Maidan, New Delhi', distanceKm: 1.8, description: 'Celebrates traditional village craft heritage with live artisan demonstrations and tribal art.' }
+        ]
+      },
+      {
+        city: 'Kurukshetra',
+        country: 'India',
+        query: 'best places to visit in Kurukshetra',
+        lat: 29.9695,
+        lon: 76.8783,
+        category: null,
+        places: [
+          { id: 'k1', name: 'Brahma Sarovar', category: 'Temple / Sacred Site', lat: 29.9657, lon: 76.8370, address: 'Thanesar, Kurukshetra, Haryana 136118', distanceKm: 0.5, description: 'Ancient sacred water reservoir revered as the cradle of civilization and site of the solar eclipse bath.' },
+          { id: 'k2', name: 'Jyotisar Birthplace of Gita', category: 'Historic Landmark', lat: 29.9610, lon: 76.7680, address: 'Jyotisar, Kurukshetra, Haryana 136119', distanceKm: 5.2, description: 'Sacred spot under an immortal Banyan tree where Lord Krishna imparted the Bhagavad Gita to Arjuna.' },
+          { id: 'k3', name: 'Kurukshetra Panorama and Science Centre', category: 'Museum', lat: 29.9678, lon: 76.8421, address: 'Pehowa Road, Thanesar, Kurukshetra', distanceKm: 0.8, description: 'Dramatic cylindrical hall with 3D lifelike battle dioramas illustrating the Mahabharata War.' },
+          { id: 'k4', name: 'Sheikh Chilli\'s Tomb', category: 'Monument', lat: 29.9790, lon: 76.8285, address: 'Thanesar, Kurukshetra, Haryana', distanceKm: 1.9, description: 'Striking Mughal architectural complex built in memory of Sufi master Abd-ur-Rahim.' }
+        ]
+      }
+    ];
+
+    let currentDatasetIdx = 0;
+    let currentTab = 'sights'; // 'sights' | 'itinerary' | 'map'
+    let currentCategory = null;
+    let selectedPlace = null;
+    let isDark = false;
+    let viewMode = 'sidebar';
+
+    function formatDistance(distKm) {
+      if (!distKm && distKm !== 0) return '';
+      if (distKm < 1) return Math.round(distKm * 1000) + ' m';
+      return distKm.toFixed(1) + ' km';
+    }
+
+    function estimateTime(distKm) {
+      if (!distKm) return '';
+      if (distKm <= 1.5) {
+        return '🚶 ' + Math.max(3, Math.round((distKm / 4.5) * 60)) + ' min walk';
+      }
+      return '🚗 ' + Math.max(5, Math.round((distKm / 22) * 60)) + ' min drive';
+    }
+
+    function renderApp() {
+      const data = DATASETS[currentDatasetIdx];
+      let filteredPlaces = data.places;
+
+      if (currentCategory) {
+        filteredPlaces = data.places.filter(p => {
+          const c = p.category.toLowerCase();
+          if (currentCategory === 'museum') return c.includes('museum');
+          if (currentCategory === 'monument') return c.includes('landmark') || c.includes('monument') || c.includes('fort');
+          if (currentCategory === 'temple') return c.includes('temple') || c.includes('sacred');
+          if (currentCategory === 'park') return c.includes('park') || c.includes('nature');
+          if (currentCategory === 'viewpoint') return c.includes('viewpoint');
+          return true;
+        });
+      }
+
+      // Title
+      let title = 'Top Sights in ' + data.city;
+      if (currentCategory === 'museum') title = 'Museums in ' + data.city;
+      else if (currentCategory === 'monument') title = 'Landmarks & Monuments in ' + data.city;
+      else if (currentCategory === 'temple') title = 'Temples & Sacred Sites in ' + data.city;
+
+      const appEl = document.getElementById('tourismApp');
+      appEl.innerHTML = `
+        <div class="te-container te-${viewMode} ${isDark ? 'te-dark' : ''}">
+          <!-- Header -->
+          <header class="te-header">
+            <div class="te-header-top">
+              <div class="te-title-group">
+                <div class="te-icon-badge">🧭</div>
+                <div>
+                  <h1 class="te-title">${title}</h1>
+                  <p class="te-subtitle">
+                    <span>📍 ${data.city}, ${data.country}</span>
+                    <span>•</span>
+                    <span>${viewMode === 'sidebar' ? 'Sidebar View' : 'Mainline View'}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Weather Bar -->
+            <div class="te-weather-bar">
+              <div class="te-weather-main">
+                <span style="font-size: 20px;">☀️</span>
+                <span class="te-weather-temp">23°F</span>
+                <span style="color: var(--te-text-muted);">Clear Sky</span>
+              </div>
+              <div class="te-weather-advice">
+                Clear skies! Ideal conditions for exploring sights and outdoor landmarks.
+              </div>
+            </div>
+          </header>
+
+          <!-- Tabs Navigation -->
+          <nav class="te-tabs">
+            <button class="te-tab-btn ${currentTab === 'sights' ? 'active' : ''}" onclick="switchTab('sights')">
+              <span>🏛️</span><span>Top Sights (${filteredPlaces.length})</span>
+            </button>
+            <button class="te-tab-btn ${currentTab === 'itinerary' ? 'active' : ''}" onclick="switchTab('itinerary')">
+              <span>📅</span><span>Day Itinerary</span>
+            </button>
+            <button class="te-tab-btn ${currentTab === 'map' ? 'active' : ''}" onclick="switchTab('map')">
+              <span>🗺️</span><span>Map View</span>
+            </button>
+          </nav>
+
+          <!-- Category Filter Bar -->
+          <div class="te-categories-bar">
+            <button class="te-cat-pill ${!currentCategory ? 'active' : ''}" onclick="filterCategory(null)">
+              <span>✨</span><span>All Sights</span>
+            </button>
+            <button class="te-cat-pill ${currentCategory === 'museum' ? 'active' : ''}" onclick="filterCategory('museum')">
+              <span>🏛️</span><span>Museums</span>
+            </button>
+            <button class="te-cat-pill ${currentCategory === 'monument' ? 'active' : ''}" onclick="filterCategory('monument')">
+              <span>🏰</span><span>Landmarks & Forts</span>
+            </button>
+            <button class="te-cat-pill ${currentCategory === 'temple' ? 'active' : ''}" onclick="filterCategory('temple')">
+              <span>🛕</span><span>Temples & Sacred</span>
+            </button>
+            <button class="te-cat-pill ${currentCategory === 'park' ? 'active' : ''}" onclick="filterCategory('park')">
+              <span>🌳</span><span>Parks & Nature</span>
+            </button>
+          </div>
+
+          <!-- Main Content -->
+          <main class="te-content">
+            ${renderTabContent(filteredPlaces, data)}
+          </main>
+        </div>
+      `;
+    }
+
+    function renderTabContent(places, data) {
+      if (places.length === 0) {
+        return `
+          <div style="text-align:center; padding: 40px 10px;">
+            <div style="font-size: 36px; margin-bottom: 10px;">🔍</div>
+            <h3 style="margin: 0 0 6px 0;">No matching places found</h3>
+            <p style="color: var(--te-text-muted); font-size: 13px; margin-bottom: 16px;">Try switching to All Sights.</p>
+            <button class="query-btn active" onclick="filterCategory(null)">Show All Sights</button>
+          </div>
+        `;
+      }
+
+      if (currentTab === 'sights') {
+        return `
+          <div class="te-grid">
+            ${places.map((p, idx) => `
+              <article class="te-card" onclick="openDetails('${p.id}')">
+                <div class="te-card-header">
+                  <h3 class="te-card-title">
+                    <span style="color: var(--te-primary); margin-right: 6px;">#${idx + 1}</span>
+                    ${p.name}
+                  </h3>
+                  <span class="te-category-badge">${p.category}</span>
+                </div>
+                <div class="te-card-address">
+                  <span>📍</span><span>${p.address}</span>
+                </div>
+                <p class="te-card-desc">${p.description}</p>
+                <div class="te-card-footer">
+                  <div class="te-distances">
+                    <span class="te-dist-tag">🎯 ${formatDistance(p.distanceKm)}</span>
+                    <span class="te-dist-tag">${estimateTime(p.distanceKm)}</span>
+                  </div>
+                  <div class="te-card-actions" onclick="event.stopPropagation()">
+                    <button class="te-action-link" onclick="openDetails('${p.id}')">Details</button>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ' ' + p.address)}" target="_blank" class="te-action-link">Directions ↗</a>
+                  </div>
+                </div>
+              </article>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      if (currentTab === 'itinerary') {
+        const slots = [
+          { name: 'Morning (09:30 AM)', icon: '🌅', tip: 'Best light & fewer crowds' },
+          { name: 'Midday (12:30 PM)', icon: '☀️', tip: 'Indoor sights & lunch break' },
+          { name: 'Afternoon (03:00 PM)', icon: '🏛️', tip: 'Prime exploration time' },
+          { name: 'Sunset (06:00 PM)', icon: '🌇', tip: 'Golden hour panoramas' }
+        ];
+
+        return `
+          <div style="margin-bottom: 14px;">
+            <h2 style="font-size: 15px; font-weight: 700; margin: 0 0 2px 0;">📅 AI Smart Day Itinerary</h2>
+            <p style="font-size: 12px; color: var(--te-text-muted); margin: 0;">Optimized visiting order to minimize walking & travel distance.</p>
+          </div>
+          <div class="te-plan-list">
+            ${places.map((p, idx) => {
+              const slot = slots[Math.min(idx, slots.length - 1)];
+              const isLast = idx === places.length - 1;
+              return `
+                <div class="te-plan-item">
+                  <div class="te-plan-timeline">
+                    <div class="te-plan-step-num">${idx + 1}</div>
+                    ${!isLast ? '<div class="te-plan-line"></div>' : ''}
+                  </div>
+                  <div class="te-plan-card" onclick="openDetails('${p.id}')">
+                    <div class="te-plan-slot-header">
+                      <span>${slot.icon} ${slot.name}</span>
+                      <span style="font-size: 11px; opacity: 0.7;">⏱ Suggested: 1.5 hrs</span>
+                    </div>
+                    <h3 class="te-plan-place-name">${p.name}</h3>
+                    <p style="font-size: 12px; color: var(--te-text-muted); margin: 0 0 6px 0;">${p.description}</p>
+                    <div style="display: flex; gap: 8px; font-size: 11px; align-items: center;">
+                      <span class="te-category-badge">${p.category}</span>
+                      <span style="color: var(--te-accent); font-weight: 500;">🚶 ${formatDistance(p.distanceKm * 0.7)} from previous</span>
+                      <span style="margin-left: auto; font-style: italic; color: var(--te-text-dim);">💡 ${slot.tip}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      if (currentTab === 'map') {
+        const width = 400;
+        const height = 300;
+        const lats = places.map(p => p.lat);
+        const lons = places.map(p => p.lon);
+        const minLat = Math.min(...lats), maxLat = Math.max(...lats);
+        const minLon = Math.min(...lons), maxLon = Math.max(...lons);
+        const latSpan = Math.max(maxLat - minLat, 0.015);
+        const lonSpan = Math.max(maxLon - minLon, 0.015);
+
+        const project = (lat, lon) => ({
+          x: 40 + ((lon - minLon) / lonSpan) * 320,
+          y: height - (40 + ((lat - minLat) / latSpan) * 220)
+        });
+
+        const points = places.map((p, idx) => ({ ...p, ...project(p.lat, p.lon), idx: idx + 1 }));
+
+        return `
+          <div class="te-map-wrapper">
+            <svg class="te-map-svg" viewBox="0 0 400 300">
+              <defs>
+                <pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse">
+                  <path d="M 25 0 L 0 0 0 25" fill="none" stroke="currentColor" stroke-opacity="0.08" stroke-width="1" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+              <circle cx="200" cy="150" r="70" fill="none" stroke="#2563eb" stroke-opacity="0.15" stroke-dasharray="3 3" />
+              <circle cx="200" cy="150" r="4" fill="#2563eb" />
+              <text x="208" y="154" font-size="10" fill="var(--te-text-muted)" font-weight="bold">City Center</text>
+
+              <!-- Connection route -->
+              <path d="M ${points.map(p => p.x + ' ' + p.y).join(' L ')}" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-opacity="0.3" stroke-dasharray="4 4" />
+
+              <!-- Pins -->
+              ${points.map(p => `
+                <g class="te-map-marker-pin" transform="translate(${p.x}, ${p.y})" onclick="openDetails('${p.id}')">
+                  <circle r="11" fill="#2563eb" stroke="#ffffff" stroke-width="2" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.25))" />
+                  <text text-anchor="middle" dy="3.5" font-size="9" fill="#ffffff" font-weight="bold">${p.idx}</text>
+                  <text text-anchor="middle" dy="20" font-size="9" fill="var(--te-text)" font-weight="bold">${p.name.length > 14 ? p.name.substring(0, 13) + '…' : p.name}</text>
+                </g>
+              `).join('')}
+            </svg>
+          </div>
+        `;
+      }
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      renderApp();
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      renderApp();
+    }
+
+    function loadQuery(idx) {
+      currentDatasetIdx = idx;
+      currentCategory = DATASETS[idx].category;
+      document.querySelectorAll('.query-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === idx);
+      });
+      renderApp();
+    }
+
+    function openDetails(id) {
+      const data = DATASETS[currentDatasetIdx];
+      const place = data.places.find(p => p.id === id);
+      if (!place) return;
+
+      const modalEl = document.getElementById('modalContainer');
+      modalEl.innerHTML = `
+        <div class="te-modal-overlay" onclick="closeDetails()">
+          <div class="te-modal" onclick="event.stopPropagation()">
+            <div class="te-modal-header">
+              <div>
+                <span class="te-category-badge" style="margin-bottom: 6px; display: inline-block;">${place.category}</span>
+                <h2 style="margin: 0; font-size: 18px; font-weight: bold;">${place.name}</h2>
+              </div>
+              <button class="te-action-link" onclick="closeDetails()">✕</button>
+            </div>
+            <div class="te-modal-body">
+              <p style="font-size: 13px; color: var(--te-text-muted); margin: 0 0 12px 0;">📍 <strong>Address:</strong> ${place.address}</p>
+              <p style="font-size: 14px; line-height: 1.5; margin: 0 0 16px 0;">${place.description}</p>
+              <div style="background: var(--te-bg-subtle); padding: 12px; border-radius: 8px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div>Distance: <strong>${formatDistance(place.distanceKm)}</strong></div>
+                <div>Transit: <strong>${estimateTime(place.distanceKm)}</strong></div>
+              </div>
+            </div>
+            <div class="te-modal-footer">
+              <button class="query-btn" onclick="closeDetails()">Close</button>
+              <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name + ' ' + place.address)}" target="_blank" class="query-btn active" style="text-decoration: none;">Open in Google Maps ↗</a>
+            </div>
+          </div>
+        </div>
+      `;
+      modalEl.style.display = 'block';
+    }
+
+    function closeDetails() {
+      document.getElementById('modalContainer').style.display = 'none';
+    }
+
+    // Toolbar Event Listeners
+    document.getElementById('themeToggleBtn').addEventListener('click', () => {
+      isDark = !isDark;
+      document.body.classList.toggle('dark', isDark);
+      renderApp();
+    });
+
+    document.getElementById('viewSidebarBtn').addEventListener('click', () => {
+      viewMode = 'sidebar';
+      document.getElementById('stageContainer').className = 'stage-sidebar';
+      document.getElementById('viewSidebarBtn').classList.add('active');
+      document.getElementById('viewMainlineBtn').classList.remove('active');
+      renderApp();
+    });
+
+    document.getElementById('viewMainlineBtn').addEventListener('click', () => {
+      viewMode = 'mainline';
+      document.getElementById('stageContainer').className = 'stage-mainline';
+      document.getElementById('viewMainlineBtn').classList.add('active');
+      document.getElementById('viewSidebarBtn').classList.remove('active');
+      renderApp();
+    });
+
+    // Initial Render
+    renderApp();
+  </script>
+</body>
+</html>
